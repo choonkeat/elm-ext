@@ -1,4 +1,4 @@
-module Json.Encode.Ext exposing (..)
+module Ext.Json.Encode exposing (..)
 
 import Json.Encode
 

@@ -1,4 +1,4 @@
-module String.Ext exposing (..)
+module Ext.String exposing (..)
 
 import Base16
 import Base64

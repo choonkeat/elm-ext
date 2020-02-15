@@ -1,4 +1,4 @@
-module Dict.Ext exposing (..)
+module Ext.Dict exposing (..)
 
 import Dict exposing (Dict)
 

@@ -1,4 +1,4 @@
-module Url.Parser.Query.Ext exposing (dictFromString, dictFromUrl, uriDecode)
+module Ext.Url.Parser.Query exposing (dictFromString, dictFromUrl, uriDecode)
 
 import Dict exposing (Dict)
 import Json.Decode

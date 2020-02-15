@@ -1,4 +1,4 @@
-module Maybe.Ext exposing (..)
+module Ext.Maybe exposing (..)
 
 import Task exposing (Task)
 

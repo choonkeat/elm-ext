@@ -1,4 +1,4 @@
-module Result.Ext exposing (..)
+module Ext.Result exposing (..)
 
 import Task exposing (Task)
 

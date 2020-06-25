@@ -79,3 +79,22 @@ httpRawResolver resp =
 
         Http.NetworkError_ ->
             Err Http.NetworkError
+
+
+httpErrorString : Http.Error -> String
+httpErrorString err =
+    case err of
+        Http.BadUrl s ->
+            "Bad url: " ++ s
+
+        Http.Timeout ->
+            "Timeout"
+
+        Http.NetworkError ->
+            "Network error"
+
+        Http.BadStatus i ->
+            "Unexpected status " ++ String.fromInt i
+
+        Http.BadBody s ->
+            "Unexpected response: " ++ s

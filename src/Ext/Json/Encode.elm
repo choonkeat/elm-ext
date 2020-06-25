@@ -1,6 +1,8 @@
 module Ext.Json.Encode exposing (..)
 
+import Iso8601
 import Json.Encode
+import Time
 
 
 {-| Decode a nested JSON object, requiring certain fields.
@@ -46,3 +48,8 @@ at keys value =
 tuple : (a -> Json.Encode.Value) -> (b -> Json.Encode.Value) -> ( a, b ) -> Json.Encode.Value
 tuple encoderA encoderB ( a, b ) =
     Json.Encode.list identity [ encoderA a, encoderB b ]
+
+
+timePosix : Time.Posix -> Json.Encode.Value
+timePosix t =
+    Json.Encode.string (Iso8601.fromTime t)

@@ -1,9 +1,9 @@
 {
   "root": "../src",
   "tests": [
-      "Dict.Ext",
-      "Json.Encode.Ext",
-      "String.Ext",
-      "Url.Parser.Query.Ext"
+      "Ext.Dict",
+      "Ext.Json.Encode",
+      "Ext.String",
+      "Ext.Url.Parser.Query"
   ]
 }

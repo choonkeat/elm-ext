@@ -79,3 +79,25 @@ without blacklist dict =
         )
         Dict.empty
         dict
+
+
+{-|
+
+    import Dict
+
+    only ["b", "a"] (Dict.fromList [("a", Nothing), ("b", Just 1), ("c", Just 42)])
+    --> Dict.fromList [("a", Nothing), ("b", Just 1)]
+
+-}
+only : List comparable -> Dict comparable a -> Dict comparable a
+only blacklist dict =
+    Dict.foldl
+        (\k v acc ->
+            if List.member k blacklist then
+                Dict.insert k v acc
+
+            else
+                acc
+        )
+        Dict.empty
+        dict

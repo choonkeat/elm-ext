@@ -11,3 +11,8 @@ toTask result =
 
         Err x ->
             Task.fail x
+
+
+okValues : List (Result x a) -> List a
+okValues =
+    List.foldr (\rx acc -> Result.withDefault acc (Result.map (\x -> x :: acc) rx)) []

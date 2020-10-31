@@ -27,7 +27,11 @@ jsonDecodeHttpResponse decoder resp =
             Err Http.NetworkError
 
         Http.BadStatus_ m s ->
-            Err (Http.BadStatus m.statusCode)
+            if s == "" then
+                Err (Http.BadStatus m.statusCode)
+
+            else
+                Err (Http.BadBody (String.fromInt m.statusCode ++ ": " ++ s))
 
 
 
@@ -56,7 +60,11 @@ httpStringBodyResolver resp =
             Err Http.NetworkError
 
         Http.BadStatus_ m s ->
-            Err (Http.BadStatus m.statusCode)
+            if s == "" then
+                Err (Http.BadStatus m.statusCode)
+
+            else
+                Err (Http.BadBody (String.fromInt m.statusCode ++ ": " ++ s))
 
 
 {-| httpRawResolver makes no judgement of what is good or bad http status.

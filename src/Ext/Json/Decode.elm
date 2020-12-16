@@ -1,4 +1,4 @@
-module Ext.Json.Decode exposing (asString, fromResult, listOk, timePosix)
+module Ext.Json.Decode exposing (asString, filterOk, fromResult, listOk, timePosix)
 
 import Imf.DateTime
 import Iso8601
@@ -24,6 +24,21 @@ listOk : Json.Decode.Decoder a -> Json.Decode.Decoder (List a)
 listOk decoder =
     Json.Decode.list Json.Decode.value
         |> Json.Decode.map (List.foldr (prependOk decoder) [])
+
+
+filterOk : Json.Decode.Decoder a -> List Json.Decode.Value -> List a
+filterOk decoder values =
+    List.foldr
+        (\value acc ->
+            case Json.Decode.decodeValue decoder value of
+                Err _ ->
+                    acc
+
+                Ok a ->
+                    a :: acc
+        )
+        []
+        values
 
 
 timePosix : Json.Decode.Decoder Time.Posix

@@ -1,4 +1,12 @@
-module Ext.Json.Decode exposing (asString, filterOk, fromResult, listOk, timePosix)
+module Ext.Json.Decode exposing
+    ( asString
+    , filterOk
+    , fromResult
+    , keyword
+    , listOk
+    , stringAs
+    , timePosix
+    )
 
 import Imf.DateTime
 import Iso8601
@@ -92,3 +100,24 @@ asString =
         , Json.Decode.int |> Json.Decode.map String.fromInt
         , Json.Decode.float |> Json.Decode.map String.fromFloat
         ]
+
+
+{-| decode a string and require the string to be an exact value, otherwise fail
+-}
+keyword : String -> Json.Decode.Decoder ()
+keyword expected =
+    Json.Decode.string
+        |> Json.Decode.andThen
+            (\actual ->
+                if expected == actual then
+                    Json.Decode.succeed ()
+
+                else
+                    Json.Decode.fail actual
+            )
+
+
+stringAs : Json.Decode.Decoder a -> Json.Decode.Decoder a
+stringAs decoder =
+    Json.Decode.string
+        |> Json.Decode.andThen (Json.Decode.decodeString decoder >> fromResult)

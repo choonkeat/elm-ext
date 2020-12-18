@@ -1,6 +1,8 @@
 module Ext.Time exposing (..)
 
 import DateFormat
+import Imf.DateTime
+import Iso8601
 import Time
 
 
@@ -97,3 +99,37 @@ yyyymmdd =
         , DateFormat.monthFixed
         , DateFormat.dayOfMonthFixed
         ]
+
+
+{-| <https://ruby-doc.org/core-2.6.3/Time.html#method-i-to_s>
+
+    `t.utc.to_s                         #=> "2012-11-10 17:16:12 UTC"`
+    `t.strftime "%Y-%m-%d %H:%M:%S UTC" #=> "2012-11-10 17:16:12 UTC"`
+
+-}
+maybeTimeFromRuby : String -> Maybe Time.Posix
+maybeTimeFromRuby string =
+    let
+        sanitizedString =
+            if String.endsWith " UTC" string then
+                -- convert `2014-05-17 05:03:17 UTC`
+                -- into    `2014-05-17T05:03:17Z`
+                String.split " " string
+                    |> List.take 2
+                    |> String.join "T"
+                    |> (\s -> s ++ "Z")
+
+            else
+                string
+    in
+    Result.toMaybe (Iso8601.toTime sanitizedString)
+
+
+maybeTimeFromIso8601 : String -> Maybe Time.Posix
+maybeTimeFromIso8601 =
+    Iso8601.toTime >> Result.toMaybe
+
+
+maybeTimeFromInternetMessageFormat : String -> Maybe Time.Posix
+maybeTimeFromInternetMessageFormat =
+    Imf.DateTime.toPosix >> Result.toMaybe

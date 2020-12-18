@@ -8,7 +8,8 @@ module Ext.Json.Decode exposing
     , timePosix
     )
 
-import Imf.DateTime
+import Ext.Maybe
+import Ext.Time
 import Iso8601
 import Json.Decode
 import Time
@@ -55,29 +56,21 @@ timePosix =
         |> Json.Decode.andThen
             (\string ->
                 let
-                    sanitizedString =
-                        if String.endsWith " UTC" string then
-                            -- convert `2014-05-17 05:03:17 UTC`
-                            -- into    `2014-05-17T05:03:17Z`
-                            String.split " " string
-                                |> List.take 2
-                                |> String.join "T"
-                                |> (\s -> s ++ "Z")
-
-                        else
-                            string
+                    maybeTimePosix =
+                        List.foldl
+                            (\convert maybe -> Ext.Maybe.otherwise (\() -> convert string) maybe)
+                            Nothing
+                            [ Ext.Time.maybeTimeFromIso8601
+                            , Ext.Time.maybeTimeFromRuby
+                            , Ext.Time.maybeTimeFromInternetMessageFormat
+                            ]
                 in
-                case Iso8601.toTime sanitizedString of
-                    Ok iso8601value ->
-                        Json.Decode.succeed iso8601value
+                case maybeTimePosix of
+                    Just a ->
+                        Json.Decode.succeed a
 
-                    _ ->
-                        case Imf.DateTime.toPosix string of
-                            Ok rfc2822value ->
-                                Json.Decode.succeed rfc2822value
-
-                            _ ->
-                                Json.Decode.fail ("Invalid ISO 8601 or RFC 2822 format: " ++ string)
+                    Nothing ->
+                        Json.Decode.fail ("Invalid date time: " ++ string)
             )
 
 

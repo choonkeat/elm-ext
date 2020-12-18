@@ -8,11 +8,11 @@ toTask x =
     Maybe.map Task.succeed >> Maybe.withDefault (Task.fail x)
 
 
-otherwise : Maybe a -> Maybe a -> Maybe a
-otherwise defaultMaybe currentMaybe =
+otherwise : (() -> Maybe a) -> Maybe a -> Maybe a
+otherwise lazyDefaultMaybe currentMaybe =
     case currentMaybe of
-        Just a ->
+        Just _ ->
             currentMaybe
 
         Nothing ->
-            defaultMaybe
+            lazyDefaultMaybe ()
